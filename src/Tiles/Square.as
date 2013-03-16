@@ -1,4 +1,4 @@
-package Board 
+package Tiles 
 {
 	import flash.display.Sprite;
 	
@@ -8,8 +8,8 @@ package Board
 	 */
 	public class Square extends Sprite
 	{
-		public var rectangle:Sprite,passable:Boolean,type:String;
-		private var mX:int, mY:int;
+		public var occupied:Boolean,type:String,passable:Boolean, litup:Boolean;
+		public var mX:int, mY:int;
 		public var squareSize:int;//passed down from board
 		
 
@@ -21,26 +21,42 @@ package Board
 			mY = yS;//start point
 			squareSize = sz;//size
 			type = sType;			//the wall type, maybe delete this
-			rectangle = new Sprite();
 			typeEval(sType);	//setup display properties
 		}
+		
+		
 		
 		
 		private function typeEval(type:String):void {
 			//evaluates the ytype sent in and calls the appropriate display function
 			if (type == "O") {//open space
-				openSpace();
+				enterable = true;
+				rectangle.graphics.beginFill(0xB0B0B0,1);//fill color
+				drawRect();
+			
 			}else if (type.split(",")[0] == "W") {//wall
-				openSpace();
+				enterable = false;
+				rectangle.graphics.beginFill(0xB0B0B0,1);//fill color
+				drawRect();
 				wallDraw(int(type.split(",")[1]));
+			
+			}else if (type == "F") {//finish space
+				enterable = true;
+				finishSquare = true;
+				rectangle.graphics.beginFill(0xFFA500, 1);//fill color
+				drawRect();
+			}else if (type == "H") {//hero start space
+				enterable = true;
+				hStartS = true;
+				rectangle.graphics.beginFill(0x4682B4, 1);//fill color
+				drawRect();
 			}
 		}
-		 
-		public function openSpace():void {
+				
+		public function drawRect():void {
 			//creates an open space rectangle and adds to square
 			
-			passable = true;
-			rectangle.graphics.beginFill(0xB0B0B0,1);//fill color
+
 			rectangle.graphics.lineStyle(0, 0x000000);//border line stmYle
 			rectangle.graphics.drawRect(mX, mY, squareSize, squareSize);//draw the rectangle
 			rectangle.graphics.endFill();//stop filling?
@@ -70,7 +86,6 @@ package Board
 			 * o - all 4 sides			(0000) 0
 			 */
 			var col:int = 0xFF0000;	//color of our walls
-			passable = false;//can't walk through walls
 			
 			//setup line stuff
 			var line:Sprite = new Sprite();

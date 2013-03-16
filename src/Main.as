@@ -2,6 +2,7 @@ package
 {
 	import Board.Board;
 	import Board.Square;
+	import Characters.Hero;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.display.Shape;
@@ -14,21 +15,13 @@ package
 	 */
 	public class Main extends Sprite 
 	{
-		public var brd:Board, squareSize:int, lineThickness:int,bArray:Array;
+		public var brd:Board, squareSize:int, lineThickness:int,bArray:Array,hro:Hero;
 		private var file:fileReader;
 		public function Main():void 
 		{
-			/*squareSize = 10;
-			brd = new Board(10,10,squareSize);
-			this.addChild(brd);
-			brd.createBoard();
-			brd.addSquares();*/
 			squareSize = 20;
 			file = new fileReader();
 			file.fileR.addEventListener(Event.COMPLETE, completeHandler);//this executes when the file is completed loading
-			//addEventListener(file.ready==true, fileComplete);
-			
-;
 		}
 		
 		private function completeHandler(e:Event):void {
@@ -49,6 +42,18 @@ package
 			//calls all fucntions to make the board;
 			brd = new Board(bArray, squareSize);
 			stage.addChild(brd);
+		}
+		
+		private function addHero():void {
+			for each (var thing:Square in brd) {
+				if (thing.hStartS) {
+					//error here with sx,sy
+					var sX:int = thing.mX;
+					var sY:int = thing.mY;
+				}
+			}
+			hro = new Hero(sX, sY, squareSize);
+			addChild(hro);
 		}
 	}
 }

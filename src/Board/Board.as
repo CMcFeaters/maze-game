@@ -52,7 +52,7 @@ package Board
 			var sType:String;//a string representing the type of square being created
 			
 			for (var r:int = 0; r < bDepth; r++) {//row
-				for (var c:int = 0; c < bWidth; c++) {//col
+				for (var c:int = 0; c < tempArray[r].length-1; c++) {//col
 
 					sType = tempArray[r][c];
 					if (sType == "W") {	//if it's a wall we willanalyze it and create a string in the format of "W,(type)"
