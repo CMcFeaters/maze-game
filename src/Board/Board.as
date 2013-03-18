@@ -1,8 +1,10 @@
 package Board 
 {
 	import flash.display.Sprite;
-	import Board.Square;
 	import Math;
+	import Tiles.Blank;
+	import Tiles.OpenSpace;
+	import Tiles.Wall;
 	/**
 	 * this is a board factory, it is given a matrix of the board in text format
 	 * and produces a board from that
@@ -35,7 +37,7 @@ package Board
 			startY = Math.round((600 - bDepth * squareSize) / 2);//starting y position.
 			
 			createBoard();//make the blank board
-			addSquares();//add the squares
+			addTiles();//add the squares
 		}
 		
 		public function createBoard():void {
@@ -46,28 +48,45 @@ package Board
 				bArray[r] = [];
 			}
 		}
-		
-		public function addSquares():void {
-			//transforms tArray into a bArray of squares
+		/*******************************
+		 * may need to add a switch array to keep track of switch status
+		 * *******************************/
+		public function addTiles():void {
+			//transforms tArray into a bArray of tiles
 			var sType:String;//a string representing the type of square being created
+			var temp;// a place holder for the tile to be added to the board array
+			var sX:int, sY:int;
 			
 			for (var r:int = 0; r < bDepth; r++) {//row
-				for (var c:int = 0; c < tempArray[r].length-1; c++) {//col
-
-					sType = tempArray[r][c];
-					if (sType == "W") {	//if it's a wall we willanalyze it and create a string in the format of "W,(type)"
-						sType = "W,"+wallAnalyzer(r,c);
+				for (var c:int = 0; c < tempArray[r].length ; c++) {//col
+					
+					sX = startX + squareSize * c;	//x starting coordinate
+					sY = startY + squareSize * r;	//y starting coordinate
+					
+					sType = tempArray[r][c];	//read the tile type from the text file
+					
+					switch (sType) {//determine what type of tile will be added to the board
+						case "W"://the tile is a wall
+							temp = new Wall(r*bDepth+c+1,sX, sY, squareSize, wallAnalyzer(r, c));
+							
+							break;
+						case "O"://the tile is an open space
+							temp = new OpenSpace(r*bDepth+c+1,sX, sY, squareSize);
+							break;
+						default://the tile is a blankspace/unknwon
+							temp = new Blank(r*bDepth+c+1,sX, sY, squareSize);
+							break;
 					}
-					//trace ("(" + r + "," + c + ")-"+"(" + (startX + squareSize * r) + "," +(startY + squareSize * c) + ")-" + sType);
-		
-					bArray[r][c] = new Square(startX + squareSize * c, startY + squareSize * r, squareSize, sType);//create the square
+					
+						
+					bArray[r][c] = temp;//create the square
 					addChild(bArray[r][c]);
 					
 				}
 			}
 		}
 		
-		public function wallAnalyzer(r:int,c:int):String {
+		public function wallAnalyzer(r:int,c:int):int {
 			//analyzes the surrounding tArray cells to determine what type of wall will be built
 			//returns an int, corresponding to the binary number in the table below
 			/*Wall types
@@ -106,13 +125,13 @@ package Board
 					wallState += 1;
 				}
 			}
-			if (c < bWidth - 1) {//check right
+			if (c < bWidth) {//check right
 				if (tempArray[r][c + 1] == "W") {
 					wallState += 4;
 				}
 				
 			}
-			return wallState.toString();
+			return wallState;
 			
 		}
 		

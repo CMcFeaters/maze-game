@@ -1,28 +1,30 @@
 package 
 {
 	import Board.Board;
-	import Board.Square;
-	import Characters.Hero;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.display.Shape;
 	import flash.display.DisplayObject;
 	import files.fileReader;
+	import flash.events.MouseEvent;
 	import flash.events.ProgressEvent;
+	import Tiles.Tile;
 	/**
 	 * ...
 	 * @author cmcfeaters
 	 */
 	public class Main extends Sprite 
 	{
-		public var brd:Board, squareSize:int, lineThickness:int,bArray:Array,hro:Hero;
+		public var brd:Board, squareSize:int, lineThickness:int, bArray:Array;
 		private var file:fileReader;
 		public function Main():void 
 		{
 			squareSize = 20;
 			file = new fileReader();
 			file.fileR.addEventListener(Event.COMPLETE, completeHandler);//this executes when the file is completed loading
+			
 		}
+		
 		
 		private function completeHandler(e:Event):void {
 			//split into set of nested arrays
@@ -36,25 +38,20 @@ package
 			}
 			makeBoard();
 			
+			
+		}
+		
+		private function mouse_click(e:MouseEvent):void {
+			trace('click');
 		}
 		
 		private function makeBoard():void {
 			//calls all fucntions to make the board;
 			brd = new Board(bArray, squareSize);
 			stage.addChild(brd);
+			stage.addEventListener(MouseEvent.CLICK, mouse_click);
 		}
-		
-		private function addHero():void {
-			for each (var thing:Square in brd) {
-				if (thing.hStartS) {
-					//error here with sx,sy
-					var sX:int = thing.mX;
-					var sY:int = thing.mY;
-				}
-			}
-			hro = new Hero(sX, sY, squareSize);
-			addChild(hro);
-		}
+	
 	}
 }
 	

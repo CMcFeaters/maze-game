@@ -48,7 +48,7 @@ package files
 		private function completeHandler(e:Event):void {
 			//read and prep file
 			var tString:String = fileR.data.toString();
-			
+			tString = tString..replace(/\r\n/g, "\n");
 			results = tString.split(/\n/);
 			ready = true;			
 		}
